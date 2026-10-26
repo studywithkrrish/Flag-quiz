@@ -4,7 +4,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Flag Master - Flag Quiz</title>
+<meta name="theme-color" content="#166534">
+<title>Flag Master | 100 Country Flag Quiz</title>
 
 <style>
 * { box-sizing: border-box; }
@@ -13,40 +14,58 @@ body {
   margin: 0;
   font-family: Arial, sans-serif;
   background: #f0fdf4;
-  color: #163b2b;
+  color: #163323;
 }
 
 header {
-  background: #166534;
+  background: linear-gradient(135deg, #064e3b, #16a34a);
   color: white;
   text-align: center;
-  padding: 24px 12px;
+  padding: 28px 14px;
 }
 
-main {
-  max-width: 600px;
-  margin: 20px auto;
-  padding: 16px;
+header h1 {
+  margin: 0 0 8px;
+  font-size: 30px;
+}
+
+header p { margin: 0; }
+
+.container {
+  max-width: 650px;
+  margin: 22px auto;
+  padding: 0 14px;
 }
 
 .card {
   background: white;
   padding: 22px;
-  border-radius: 16px;
-  box-shadow: 0 4px 15px #00000010;
+  border-radius: 18px;
+  box-shadow: 0 5px 20px #00000010;
 }
 
-.progress {
-  background: #dcfce7;
+h2 { line-height: 1.4; }
+
+.topline {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 8px;
+  font-size: 14px;
+  font-weight: bold;
+}
+
+.progress-bg {
   height: 9px;
-  border-radius: 10px;
+  background: #dcfce7;
+  border-radius: 20px;
   overflow: hidden;
-  margin: 14px 0 22px;
+  margin: 15px 0;
 }
 
-#bar {
+#progress {
+  width: 0;
   height: 100%;
-  width: 5%;
   background: #16a34a;
   transition: width .2s;
 }
@@ -54,30 +73,52 @@ main {
 #flag {
   font-size: 100px;
   text-align: center;
-  margin: 20px 0;
+  padding: 18px 0;
+  line-height: 1.4;
 }
 
-#options {
+#question {
+  text-align: center;
+  font-size: 21px;
+  margin: 8px 0 22px;
+}
+
+.options {
   display: grid;
+  grid-template-columns: 1fr;
   gap: 10px;
 }
 
 .option {
   width: 100%;
+  border: 2px solid #d1fae5;
+  border-radius: 12px;
   padding: 14px;
   background: white;
-  color: #166534;
-  border: 2px solid #bbf7d0;
-  border-radius: 10px;
+  color: #163323;
   font-size: 16px;
   text-align: left;
   cursor: pointer;
 }
 
 .option.selected {
-  background: #dcfce7;
   border-color: #15803d;
-  font-weight: bold;
+  background: #dcfce7;
+}
+
+.option.correct {
+  border-color: #16a34a;
+  background: #dcfce7;
+}
+
+.option.wrong {
+  border-color: #dc2626;
+  background: #fee2e2;
+}
+
+.option:disabled {
+  opacity: 1;
+  cursor: default;
 }
 
 button:focus-visible {
@@ -85,238 +126,417 @@ button:focus-visible {
   outline-offset: 2px;
 }
 
-.controls {
-  display: flex;
-  gap: 10px;
-  margin-top: 22px;
-}
-
-.controls button, .restart {
-  flex: 1;
-  padding: 13px;
+.main-btn {
+  width: 100%;
+  padding: 14px;
   border: none;
-  border-radius: 9px;
-  font-size: 15px;
+  border-radius: 11px;
+  background: #15803d;
+  color: white;
+  font-size: 16px;
+  font-weight: bold;
   cursor: pointer;
 }
 
-#prev {
-  background: #e5e7eb;
-  color: #111827;
-}
-
-#next, .restart {
-  background: #15803d;
-  color: white;
-}
-
-button:disabled {
-  opacity: .45;
+.main-btn:disabled {
+  background: #9ca3af;
   cursor: not-allowed;
 }
 
-#result {
+#feedback {
+  min-height: 26px;
   text-align: center;
-  display: none;
-}
-
-#score {
-  font-size: 48px;
-  color: #15803d;
+  margin: 15px 0;
   font-weight: bold;
+  line-height: 1.5;
 }
 
-#review {
-  text-align: left;
-  line-height: 1.8;
+#quiz, #result { display: none; }
+
+.score {
+  font-size: 48px;
+  font-weight: bold;
+  color: #15803d;
+  text-align: center;
+  margin: 18px 0;
+}
+
+.center { text-align: center; }
+
+.review-item {
+  padding: 12px 0;
+  border-bottom: 1px solid #e5e7eb;
+  line-height: 1.6;
   overflow-wrap: anywhere;
 }
 
 footer {
   text-align: center;
-  padding: 20px;
-  color: #52705e;
+  padding: 22px;
+  color: #52705d;
+  font-size: 13px;
+}
+
+@media (max-width: 400px) {
+  header h1 { font-size: 25px; }
+  .card { padding: 16px; }
+  #flag { font-size: 82px; }
+  #question { font-size: 19px; }
 }
 </style>
 </head>
 
 <body>
+
 <header>
   <h1>🌍 Flag Master</h1>
-  <p>Test your knowledge of world flags!</p>
+  <p>Discover the world, one flag at a time!</p>
 </header>
 
-<main>
+<main class="container">
+
+  <section class="card" id="welcome">
+    <h2>🏁 Welcome to Flag Master!</h2>
+    <p>Can you identify 100 country flags?</p>
+    <ul>
+      <li>100 different country flags</li>
+      <li>Four options for each question</li>
+      <li>Random question order every round</li>
+      <li>Instant feedback on your answers</li>
+      <li>Final score out of 100</li>
+      <li>Review all correct answers</li>
+    </ul>
+    <button class="main-btn" id="startBtn">Start Quiz 🚀</button>
+  </section>
+
   <section class="card" id="quiz">
-    <strong id="counter">Question 1 of 20</strong>
-    <div class="progress"><div id="bar"></div></div>
-
-    <div id="flag" aria-label="Flag">🇮🇳</div>
-    <h2>Which country does this flag belong to?</h2>
-    <div id="options"></div>
-
-    <div class="controls">
-      <button id="prev" onclick="move(-1)">Previous</button>
-      <button id="next" onclick="move(1)">Next</button>
+    <div class="topline">
+      <span id="counter">Question 1 of 100</span>
+      <span id="answered">Answered: 0/100</span>
     </div>
-    <p id="notice" aria-live="polite"></p>
+
+    <div class="progress-bg">
+      <div id="progress"></div>
+    </div>
+
+    <div id="flag" aria-label="Country flag">🇮🇳</div>
+    <h2 id="question">Which country does this flag belong to?</h2>
+    <div class="options" id="options"></div>
+    <div id="feedback" aria-live="polite"></div>
+
+    <button class="main-btn" id="nextBtn" disabled>
+      Next Question →
+    </button>
   </section>
 
   <section class="card" id="result">
-    <h2>🏆 Quiz Completed!</h2>
-    <p>Your final score is</p>
-    <div id="score">0/20</div>
-    <h3 id="message"></h3>
+    <h2 class="center">🎉 Quiz Completed!</h2>
+    <div class="score" id="score">0/100</div>
+    <p class="center" id="percentage"></p>
+    <h3 class="center" id="message"></h3>
+
+    <hr>
+    <h3>📝 Answer Review</h3>
     <div id="review"></div>
-    <button class="restart" onclick="restart()">Play Again</button>
+
+    <p></p>
+    <button class="main-btn" id="restartBtn">
+      Play Again 🔄
+    </button>
   </section>
+
 </main>
 
-<footer>Keep learning. Keep exploring. 🌎</footer>
+<footer>
+  Flag Master • Learn geography through fun!
+</footer>
 
 <script>
-const questions = [
-  {flag:"🇮🇳", country:"India", options:["India","Ireland","Niger","Italy"]},
-  {flag:"🇯🇵", country:"Japan", options:["China","Japan","South Korea","Thailand"]},
-  {flag:"🇫🇷", country:"France", options:["Netherlands","Russia","France","Germany"]},
-  {flag:"🇧🇷", country:"Brazil", options:["Brazil","Mexico","Argentina","Portugal"]},
-  {flag:"🇺🇸", country:"United States", options:["United Kingdom","Australia","United States","Canada"]},
-  {flag:"🇨🇦", country:"Canada", options:["Denmark","Canada","Austria","Switzerland"]},
-  {flag:"🇬🇧", country:"United Kingdom", options:["United Kingdom","New Zealand","Australia","Ireland"]},
-  {flag:"🇨🇳", country:"China", options:["Vietnam","China","Turkey","Singapore"]},
-  {flag:"🇩🇪", country:"Germany", options:["Belgium","Germany","Spain","Poland"]},
-  {flag:"🇮🇹", country:"Italy", options:["France","Mexico","Italy","Hungary"]},
-  {flag:"🇦🇺", country:"Australia", options:["United Kingdom","Australia","Fiji","New Zealand"]},
-  {flag:"🇷🇺", country:"Russia", options:["Serbia","Slovakia","Russia","Netherlands"]},
-  {flag:"🇰🇷", country:"South Korea", options:["Japan","North Korea","South Korea","Thailand"]},
-  {flag:"🇲🇽", country:"Mexico", options:["Mexico","Italy","India","Peru"]},
-  {flag:"🇪🇸", country:"Spain", options:["Portugal","Spain","Romania","Colombia"]},
-  {flag:"🇿🇦", country:"South Africa", options:["Kenya","Nigeria","South Africa","Ghana"]},
-  {flag:"🇸🇦", country:"Saudi Arabia", options:["Pakistan","Saudi Arabia","Iran","Oman"]},
-  {flag:"🇳🇵", country:"Nepal", options:["Bhutan","Nepal","Bangladesh","Sri Lanka"]},
-  {flag:"🇸🇬", country:"Singapore", options:["Indonesia","Singapore","Malaysia","Thailand"]},
-  {flag:"🇦🇷", country:"Argentina", options:["Uruguay","Argentina","Chile","Brazil"]}
+"use strict";
+
+const countries = [
+  {flag:"🇮🇳",name:"India"},
+  {flag:"🇺🇸",name:"United States"},
+  {flag:"🇬🇧",name:"United Kingdom"},
+  {flag:"🇯🇵",name:"Japan"},
+  {flag:"🇫🇷",name:"France"},
+  {flag:"🇩🇪",name:"Germany"},
+  {flag:"🇧🇷",name:"Brazil"},
+  {flag:"🇨🇦",name:"Canada"},
+  {flag:"🇦🇺",name:"Australia"},
+  {flag:"🇨🇳",name:"China"},
+  {flag:"🇮🇹",name:"Italy"},
+  {flag:"🇷🇺",name:"Russia"},
+  {flag:"🇰🇷",name:"South Korea"},
+  {flag:"🇲🇽",name:"Mexico"},
+  {flag:"🇿🇦",name:"South Africa"},
+  {flag:"🇳🇵",name:"Nepal"},
+  {flag:"🇧🇹",name:"Bhutan"},
+  {flag:"🇸🇬",name:"Singapore"},
+  {flag:"🇪🇬",name:"Egypt"},
+  {flag:"🇦🇷",name:"Argentina"},
+  {flag:"🇵🇰",name:"Pakistan"},
+  {flag:"🇧🇩",name:"Bangladesh"},
+  {flag:"🇱🇰",name:"Sri Lanka"},
+  {flag:"🇲🇻",name:"Maldives"},
+  {flag:"🇦🇫",name:"Afghanistan"},
+  {flag:"🇸🇦",name:"Saudi Arabia"},
+  {flag:"🇦🇪",name:"United Arab Emirates"},
+  {flag:"🇶🇦",name:"Qatar"},
+  {flag:"🇰🇼",name:"Kuwait"},
+  {flag:"🇮🇷",name:"Iran"},
+  {flag:"🇮🇶",name:"Iraq"},
+  {flag:"🇹🇷",name:"Turkey"},
+  {flag:"🇮🇱",name:"Israel"},
+  {flag:"🇹🇭",name:"Thailand"},
+  {flag:"🇻🇳",name:"Vietnam"},
+  {flag:"🇮🇩",name:"Indonesia"},
+  {flag:"🇲🇾",name:"Malaysia"},
+  {flag:"🇵🇭",name:"Philippines"},
+  {flag:"🇵🇱",name:"Poland"},
+  {flag:"🇪🇸",name:"Spain"},
+  {flag:"🇵🇹",name:"Portugal"},
+  {flag:"🇳🇱",name:"Netherlands"},
+  {flag:"🇧🇪",name:"Belgium"},
+  {flag:"🇨🇭",name:"Switzerland"},
+  {flag:"🇦🇹",name:"Austria"},
+  {flag:"🇸🇪",name:"Sweden"},
+  {flag:"🇳🇴",name:"Norway"},
+  {flag:"🇩🇰",name:"Denmark"},
+  {flag:"🇫🇮",name:"Finland"},
+  {flag:"🇬🇷",name:"Greece"},
+  {flag:"🇺🇦",name:"Ukraine"},
+  {flag:"🇨🇿",name:"Czechia"},
+  {flag:"🇭🇺",name:"Hungary"},
+  {flag:"🇷🇴",name:"Romania"},
+  {flag:"🇧🇬",name:"Bulgaria"},
+  {flag:"🇭🇷",name:"Croatia"},
+  {flag:"🇷🇸",name:"Serbia"},
+  {flag:"🇮🇪",name:"Ireland"},
+  {flag:"🇮🇸",name:"Iceland"},
+  {flag:"🇳🇿",name:"New Zealand"},
+  {flag:"🇰🇵",name:"North Korea"},
+  {flag:"🇲🇳",name:"Mongolia"},
+  {flag:"🇰🇭",name:"Cambodia"},
+  {flag:"🇱🇦",name:"Laos"},
+  {flag:"🇲🇲",name:"Myanmar"},
+  {flag:"🇧🇳",name:"Brunei"},
+  {flag:"🇹🇱",name:"Timor-Leste"},
+  {flag:"🇺🇿",name:"Uzbekistan"},
+  {flag:"🇰🇿",name:"Kazakhstan"},
+  {flag:"🇰🇬",name:"Kyrgyzstan"},
+  {flag:"🇹🇯",name:"Tajikistan"},
+  {flag:"🇹🇲",name:"Turkmenistan"},
+  {flag:"🇯🇴",name:"Jordan"},
+  {flag:"🇱🇧",name:"Lebanon"},
+  {flag:"🇴🇲",name:"Oman"},
+  {flag:"🇾🇪",name:"Yemen"},
+  {flag:"🇲🇦",name:"Morocco"},
+  {flag:"🇩🇿",name:"Algeria"},
+  {flag:"🇹🇳",name:"Tunisia"},
+  {flag:"🇱🇾",name:"Libya"},
+  {flag:"🇸🇩",name:"Sudan"},
+  {flag:"🇪🇹",name:"Ethiopia"},
+  {flag:"🇰🇪",name:"Kenya"},
+  {flag:"🇹🇿",name:"Tanzania"},
+  {flag:"🇺🇬",name:"Uganda"},
+  {flag:"🇬🇭",name:"Ghana"},
+  {flag:"🇳🇬",name:"Nigeria"},
+  {flag:"🇸🇳",name:"Senegal"},
+  {flag:"🇨🇲",name:"Cameroon"},
+  {flag:"🇿🇼",name:"Zimbabwe"},
+  {flag:"🇿🇲",name:"Zambia"},
+  {flag:"🇧🇼",name:"Botswana"},
+  {flag:"🇳🇦",name:"Namibia"},
+  {flag:"🇲🇿",name:"Mozambique"},
+  {flag:"🇲🇬",name:"Madagascar"},
+  {flag:"🇨🇺",name:"Cuba"},
+  {flag:"🇯🇲",name:"Jamaica"},
+  {flag:"🇨🇱",name:"Chile"},
+  {flag:"🇵🇪",name:"Peru"},
+  {flag:"🇨🇴",name:"Colombia"},
+  {flag:"🇻🇪",name:"Venezuela"},
+  {flag:"🇺🇾",name:"Uruguay"}
 ];
 
+const $ = id => document.getElementById(id);
+
+let questions = [];
+let answers = [];
 let current = 0;
-let answers = Array(questions.length).fill(null);
+let locked = false;
 
-const quiz = document.getElementById("quiz");
-const result = document.getElementById("result");
+function shuffle(array) {
+  const copy = [...array];
 
-function render() {
+  for (let i = copy.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [copy[i], copy[j]] = [copy[j], copy[i]];
+  }
+
+  return copy;
+}
+
+function startQuiz() {
+  // Shuffle the flags for each new round.
+  questions = shuffle(countries).map(country => {
+    const wrongAnswers = shuffle(
+      countries.filter(item => item.name !== country.name)
+    ).slice(0, 3);
+
+    return {
+      flag: country.flag,
+      name: country.name,
+      options: shuffle([country, ...wrongAnswers])
+    };
+  });
+
+  current = 0;
+  answers = Array(questions.length).fill(null);
+  locked = false;
+
+  $("welcome").style.display = "none";
+  $("result").style.display = "none";
+  $("quiz").style.display = "block";
+
+  renderQuestion();
+  window.scrollTo({top: 0, behavior: "smooth"});
+}
+
+function renderQuestion() {
+  locked = false;
+
   const q = questions[current];
 
-  document.getElementById("counter").textContent =
+  $("counter").textContent =
     `Question ${current + 1} of ${questions.length}`;
 
-  document.getElementById("bar").style.width =
-    `${((current + 1) / questions.length) * 100}%`;
+  $("answered").textContent =
+    `Answered: ${answers.filter(a => a !== null).length}/${questions.length}`;
 
-  document.getElementById("flag").textContent = q.flag;
+  $("progress").style.width =
+    `${current / questions.length * 100}%`;
 
-  const options = document.getElementById("options");
-  options.replaceChildren();
+  $("flag").textContent = q.flag;
+  $("question").textContent =
+    "Which country does this flag belong to?";
+
+  $("feedback").textContent = "";
+  $("nextBtn").disabled = true;
+
+  $("nextBtn").textContent =
+    current === questions.length - 1
+      ? "See Final Score 🏆"
+      : "Next Question →";
+
+  $("options").replaceChildren();
 
   q.options.forEach(option => {
     const button = document.createElement("button");
     button.className = "option";
-    button.textContent =
-      `${answers[current] === option ? "✓ " : ""}${option}`;
+    button.textContent = option.name;
 
-    if (answers[current] === option) {
-      button.classList.add("selected");
-    }
+    button.addEventListener("click", () => {
+      selectAnswer(option.name, button);
+    });
 
-    button.setAttribute("aria-pressed",
-      String(answers[current] === option));
-
-    button.onclick = () => {
-      answers[current] = option;
-      render();
-    };
-
-    options.appendChild(button);
+    $("options").appendChild(button);
   });
-
-  document.getElementById("prev").disabled = current === 0;
-
-  document.getElementById("next").textContent =
-    current === questions.length - 1
-      ? "Finish Quiz"
-      : "Next";
-
-  document.getElementById("notice").textContent =
-    answers[current] === null
-      ? "Choose one answer to continue."
-      : "Answer saved!";
-
-  document.getElementById("notice").style.color =
-    "#166534";
 }
 
-function move(direction) {
-  if (direction === 1 && answers[current] === null) {
-    document.getElementById("notice").textContent =
-      "Please select an answer first.";
-    document.getElementById("notice").style.color = "#b91c1c";
-    return;
+function selectAnswer(selected, clickedButton) {
+  if (locked) return;
+
+  locked = true;
+  const q = questions[current];
+  answers[current] = selected;
+
+  document.querySelectorAll(".option").forEach(button => {
+    button.disabled = true;
+
+    if (button.textContent === q.name) {
+      button.classList.add("correct");
+    }
+  });
+
+  if (selected === q.name) {
+    $("feedback").textContent = "✅ Correct answer!";
+    $("feedback").style.color = "#15803d";
+  } else {
+    clickedButton.classList.add("wrong");
+    $("feedback").textContent =
+      `❌ Incorrect! The correct answer is ${q.name}.`;
+    $("feedback").style.color = "#dc2626";
   }
 
-  if (direction === 1 && current === questions.length - 1) {
+  $("answered").textContent =
+    `Answered: ${answers.filter(a => a !== null).length}/${questions.length}`;
+
+  $("nextBtn").disabled = false;
+}
+
+function nextQuestion() {
+  if (!locked) return;
+
+  if (current < questions.length - 1) {
+    current++;
+    renderQuestion();
+    window.scrollTo({top: 0, behavior: "smooth"});
+  } else {
     showResult();
-    return;
   }
-
-  current += direction;
-  render();
 }
 
 function showResult() {
-  const score = questions.reduce((total, q, i) =>
-    total + (answers[i] === q.country ? 1 : 0), 0);
+  const score = questions.reduce((total, q, i) => {
+    return total + (answers[i] === q.name ? 1 : 0);
+  }, 0);
 
-  quiz.style.display = "none";
-  result.style.display = "block";
+  const percentage = Math.round(score / questions.length * 100);
 
-  document.getElementById("score").textContent =
-    `${score} / ${questions.length}`;
+  $("quiz").style.display = "none";
+  $("result").style.display = "block";
 
-  document.getElementById("message").textContent =
-    score >= 18 ? "Excellent! 🌟" :
-    score >= 14 ? "Great job! 👏" :
-    score >= 10 ? "Good effort! Keep learning!" :
-    "Keep practising. You can improve!";
+  $("score").textContent = `${score}/${questions.length}`;
+  $("percentage").textContent = `Your percentage: ${percentage}%`;
 
-  const review = document.getElementById("review");
-  review.replaceChildren();
+  if (score === 100) {
+    $("message").textContent = "🌟 Perfect score! Amazing!";
+  } else if (score >= 80) {
+    $("message").textContent = "🏆 Excellent work!";
+  } else if (score >= 60) {
+    $("message").textContent = "👏 Great job! Keep learning!";
+  } else if (score >= 40) {
+    $("message").textContent = "👍 Good effort. Keep practising!";
+  } else {
+    $("message").textContent = "💪 Keep going! You can improve!";
+  }
 
-  const heading = document.createElement("h3");
-  heading.textContent = "Answer Review";
-  review.appendChild(heading);
+  $("progress").style.width = "100%";
+  $("review").replaceChildren();
 
   questions.forEach((q, i) => {
-    const line = document.createElement("p");
-    line.textContent =
-      `${i + 1}. ${q.flag} Correct: ${q.country} | ` +
-      `Your answer: ${answers[i] ?? "Not answered"} ` +
-      `${answers[i] === q.country ? "✓" : "✗"}`;
-    review.appendChild(line);
+    const item = document.createElement("div");
+    item.className = "review-item";
+
+    const isCorrect = answers[i] === q.name;
+
+    item.textContent =
+      `${i + 1}. ${q.flag} ${q.name} — ` +
+      (isCorrect
+        ? "✅ Correct"
+        : `❌ Your answer: ${answers[i] || "Not answered"} | Correct: ${q.name}`);
+
+    $("review").appendChild(item);
   });
 
   window.scrollTo({top: 0, behavior: "smooth"});
 }
 
-function restart() {
-  current = 0;
-  answers = Array(questions.length).fill(null);
-  result.style.display = "none";
-  quiz.style.display = "block";
-  render();
-  window.scrollTo({top: 0, behavior: "smooth"});
-}
-
-render();
+$("startBtn").addEventListener("click", startQuiz);
+$("nextBtn").addEventListener("click", nextQuestion);
+$("restartBtn").addEventListener("click", startQuiz);
 </script>
+
 </body>
 </html>
